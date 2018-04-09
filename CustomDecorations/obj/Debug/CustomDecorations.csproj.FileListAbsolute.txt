@@ -1,0 +1,6 @@
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\bin\Debug\CustomDecorations.dll
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\bin\Debug\CustomDecorations.pdb
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\bin\Debug\ObjUnity3D.dll
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Debug\CustomDecorations.csprojResolveAssemblyReference.cache
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Debug\CustomDecorations.dll
+c:\users\tateihuari\documents\visual studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Debug\CustomDecorations.pdb
