@@ -7,7 +7,6 @@ namespace CustomDecorations
         public static void LoadMesh(this DecorationInfo info, Mesh mesh)
         {
             if (mesh == null) return;
-
             info.m_mesh = mesh;
         }
 
@@ -19,7 +18,6 @@ namespace CustomDecorations
         public static void LoadTexture(this DecorationInfo info, Texture2D texture)
         {
             if (texture == null) return;
-
             info?.m_renderMaterial?.SetTexture("_MainTex", texture);
         }
 

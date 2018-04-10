@@ -12,11 +12,35 @@ namespace CustomDecorations
     {
         internal bool InGame;
 
-        private CustomDectorationsSettings settings;        
-        
-        public List<CustomDecorationsData> AvailablePacks;
+        internal bool loaded;
 
-        public CustomDectorationsSettings Settings
+        internal Mesh[] CliffMeshes;
+
+        internal Texture2D[] CliffTextures;
+
+        internal Mesh[] FertileMeshes;
+
+        internal Texture2D[] FertileTextures;
+
+        internal Mesh[] GrassMeshes;
+
+        internal Texture2D[] GrassTextures;
+
+        internal DecorationRenderer DecorationRenderer => ReflectionUtil.GetField<DecorationRenderer>(TerrainManager.instance, "m_decoRenderer");
+
+        internal TerrainProperties Terrain => Singleton<TerrainManager>.instance.m_properties;
+
+        internal DecorationInfo[] GrassDecorations => Terrain.m_grassDecorations;
+
+        internal DecorationInfo[] CliffDecorations => Terrain.m_cliffDecorations;
+
+        internal DecorationInfo[] FertileDecorations => Terrain.m_fertileDecorations;
+
+        private CustomDectorationsSettings settings;
+
+        internal List<CustomDecorationsData> AvailablePacks => GetAvailablePacks();
+
+        internal CustomDectorationsSettings Settings
         {
             get
             {
@@ -37,11 +61,7 @@ namespace CustomDecorations
             }
         }
 
-        public DecorationRenderer DecorationRenderer => ReflectionUtil.GetField<DecorationRenderer>(TerrainManager.instance, "m_decoRenderer");
-
-        public TerrainProperties Terrain => Singleton<TerrainManager>.instance.m_properties;
-
-        public List<CustomDecorationsData> GetAvailablePacks()
+        internal List<CustomDecorationsData> GetAvailablePacks()
         {
             var identifier = "CustomDecorationsData.xml";
 
@@ -69,37 +89,64 @@ namespace CustomDecorations
             }
             return customDecorationsPacks;
         }
-        
-        public void LoadPack(DecorationType type)
+
+        internal void Prepare(DecorationType type)
         {
-            CustomDecorationsData pack;
-            AvailablePacks = GetAvailablePacks();
-            try
+            CustomDecorationsData pack;            
+            
+            switch (type)
             {
-                switch (type)
+                case DecorationType.Grass:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedGrassPack);
+                    break;
+                case DecorationType.Fertile:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedFertilePack);
+                    break;
+                default:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedCliffPack);
+                    break;
+            }
+
+            if (pack != null) LoadResources(pack, type);
+        }
+
+        internal void LoadResources(CustomDecorationsData pack, DecorationType type)
+        {
+            var cliffNames = new string[] { "cliff0", "cliff1", "cliff2", "cliff3" };
+            var fertileNames = new string[] { "fertile0", "fertile1", "fertile2", "fertile3" };
+            var grassNames = new string[] { "grass0", "grass1", "grass2", "grass3" };
+
+            var names = type == DecorationType.Cliff ? cliffNames : type == DecorationType.Fertile ? fertileNames : grassNames;
+            var meshList = type == DecorationType.Cliff ? CliffMeshes : type == DecorationType.Fertile ? FertileMeshes : GrassMeshes;
+            var textureList = type == DecorationType.Cliff ? CliffTextures : type == DecorationType.Fertile ? FertileTextures : GrassTextures;
+
+            meshList = new Mesh[4];
+            textureList = new Texture2D[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                var texturePath = Path.Combine(pack.ResourcesPath, names[i] + ".png");
+
+                var meshPath = Path.Combine(pack.ResourcesPath, names[i] + ".obj");
+
+                var texture = Util.LoadTexture(texturePath);
+
+                var mesh = Util.LoadMesh(meshPath);
+
+                try
                 {
-                    case DecorationType.Grass:
-                        pack = AvailablePacks.Find(p => p.Name == Settings.SelectedGrassPack);
-                        pack.Load(type);
-                        break;
-                    case DecorationType.Fertile:
-                        pack = AvailablePacks.Find(p => p.Name == Settings.SelectedFertilePack);
-                        pack.Load(type);
-                        break;
-                    default:
-                        pack = AvailablePacks.Find(p => p.Name == Settings.SelectedCliffPack);
-                        pack.Load(type);
-                        break;
+                    meshList[i] = mesh;
+
+                    textureList[i] = texture;
+                }
+                catch (Exception)
+                {
+                    
                 }
             }
-            catch (Exception)
-            {
-                
-            }
-           
-        }
-        
-        public void OnLevelLoaded()
+        }        
+
+        internal void OnLevelLoaded()
         {
             InGame = true;
             Terrain.m_useGrassDecorations = Settings.UseGrassDecorations;
@@ -107,9 +154,9 @@ namespace CustomDecorations
             Terrain.m_useCliffDecorations = Settings.UseCliffDecorations;
             DecorationRenderer.SetResolution((int)Settings.SelectedResolution);
             UpdateDensity(Settings.Density);
-            LoadPack(DecorationType.Cliff);
-            LoadPack(DecorationType.Fertile);
-            LoadPack(DecorationType.Grass);
+            new ResourceLoader(DecorationType.Cliff);
+            new ResourceLoader(DecorationType.Fertile);
+            new ResourceLoader(DecorationType.Grass);
         }
 
         internal void UpdateDensity(int i)
@@ -117,7 +164,7 @@ namespace CustomDecorations
             DecorationMesh.m_mesh = ReflectionUtil.InvokeMethod<Mesh>(typeof(DecorationMesh), "GenerateMesh", new object[] { i });
         }
 
-        public void OnLevelUnloading()
+        internal void OnLevelUnloading()
         {
             InGame = false;
         }

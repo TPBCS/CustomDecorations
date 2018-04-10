@@ -38,7 +38,6 @@ namespace CustomDecorations
         private UIDropDown grassDropdown;
 
         private UISlider densitySlider;
-        //10 - 127
 
         private int SelectedResolutionIndex => resolutionList.ToList().FindIndex(resolution => resolution == Settings.SelectedResolution.ToString());
 
@@ -117,7 +116,7 @@ namespace CustomDecorations
             {
                 Settings.SelectedCliffPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.LoadPack(DecorationType.Cliff);
+                if (Manager.InGame) new ResourceLoader(DecorationType.Cliff);
             });
             cliffDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -126,7 +125,7 @@ namespace CustomDecorations
             {
                 Settings.SelectedFertilePack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.LoadPack(DecorationType.Fertile);
+                if (Manager.InGame) new ResourceLoader(DecorationType.Fertile);
             });
             fertileDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -135,18 +134,17 @@ namespace CustomDecorations
             {
                 Settings.SelectedGrassPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.LoadPack(DecorationType.Grass);
+                if (Manager.InGame) new ResourceLoader(DecorationType.Grass);
             });
             grassDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
 
-            helper.AddButton("Load All", () => { Manager.LoadPack(DecorationType.Grass); Manager.LoadPack(DecorationType.Cliff); Manager.LoadPack(DecorationType.Fertile); });
+            helper.AddButton("Load All", () => { new ResourceLoader(DecorationType.Cliff); new ResourceLoader(DecorationType.Fertile);new ResourceLoader(DecorationType.Grass); });
         }        
 
         private string[] GetPackNames()
         {
             List<string> names = new List<string>();
-            Manager.AvailablePacks = Manager.GetAvailablePacks();
             foreach (var pack in Manager.AvailablePacks)
             {
                 names.Add(pack.Name);
