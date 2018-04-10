@@ -63,6 +63,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="ResourceLoader.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="UserMod.cs" />

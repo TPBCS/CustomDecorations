@@ -12,8 +12,6 @@ namespace CustomDecorations
     {
         internal bool InGame;
 
-        internal bool loaded;
-
         internal Mesh[] CliffMeshes;
 
         internal Texture2D[] CliffTextures;
@@ -116,12 +114,16 @@ namespace CustomDecorations
             var fertileNames = new string[] { "fertile0", "fertile1", "fertile2", "fertile3" };
             var grassNames = new string[] { "grass0", "grass1", "grass2", "grass3" };
 
+            CliffMeshes = new Mesh[4];
+            FertileMeshes = new Mesh[4];
+            GrassMeshes = new Mesh[4];
+            CliffTextures = new Texture2D[4];
+            FertileTextures = new Texture2D[4];
+            GrassTextures = new Texture2D[4];
+
             var names = type == DecorationType.Cliff ? cliffNames : type == DecorationType.Fertile ? fertileNames : grassNames;
             var meshList = type == DecorationType.Cliff ? CliffMeshes : type == DecorationType.Fertile ? FertileMeshes : GrassMeshes;
             var textureList = type == DecorationType.Cliff ? CliffTextures : type == DecorationType.Fertile ? FertileTextures : GrassTextures;
-
-            meshList = new Mesh[4];
-            textureList = new Texture2D[4];
 
             for (int i = 0; i < 4; i++)
             {

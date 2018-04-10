@@ -50,10 +50,22 @@ namespace CustomDecorations
                     loaded = done;
                 }
             }
-            var meshList = MeshList;
-            var textureList = TextureList;
-            meshList = null;
-            textureList = null;
+            switch (type)
+            {
+                case DecorationType.Grass:
+                    Instance.GrassMeshes = null;
+                    Instance.GrassTextures = null;
+                    break;
+
+                case DecorationType.Fertile:
+                    Instance.FertileMeshes = null;
+                    Instance.FertileTextures = null;
+                    break;
+                default:
+                    Instance.CliffMeshes = null;
+                    Instance.CliffTextures = null;
+                    break;
+            }
             Destroy(this);
         }
     }
