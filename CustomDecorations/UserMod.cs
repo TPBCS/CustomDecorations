@@ -116,7 +116,7 @@ namespace CustomDecorations
             {
                 Settings.SelectedCliffPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) new ResourceLoader(DecorationType.Cliff);
+                if (Manager.InGame) Manager.gameObject.AddComponent<CliffLoader>();
             });
             cliffDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -125,7 +125,7 @@ namespace CustomDecorations
             {
                 Settings.SelectedFertilePack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) new ResourceLoader(DecorationType.Fertile);
+                if (Manager.InGame) Manager.gameObject.AddComponent<FertileLoader>();
             });
             fertileDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -134,12 +134,12 @@ namespace CustomDecorations
             {
                 Settings.SelectedGrassPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) new ResourceLoader(DecorationType.Grass);
+                if (Manager.InGame) Manager.gameObject.AddComponent<GrassLoader>();
             });
             grassDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
 
-            helper.AddButton("Load All", () => { new ResourceLoader(DecorationType.Cliff); new ResourceLoader(DecorationType.Fertile);new ResourceLoader(DecorationType.Grass); });
+            helper.AddButton("Load All", () => { Manager.gameObject.AddComponent<CliffLoader>(); Manager.gameObject.AddComponent<FertileLoader>(); Manager.gameObject.AddComponent<GrassLoader>(); });
         }        
 
         private string[] GetPackNames()

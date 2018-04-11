@@ -2,71 +2,73 @@
 
 namespace CustomDecorations
 {
-    class ResourceLoader : MonoBehaviour
+    public class ResourceLoader : MonoBehaviour
     {
-        private bool loaded;
+        internal bool loaded;
 
-        private DecorationType type;
+        internal DecorationType type;
 
-        private CustomDecorationsManager Instance => CustomDecorationsManager.instance;
+        internal CustomDecorationsManager Instance => CustomDecorationsManager.instance;
 
-        private Mesh[] MeshList => type == DecorationType.Cliff ? Instance.CliffMeshes : type == DecorationType.Fertile ? Instance.FertileMeshes : Instance.GrassMeshes;
+        internal Mesh[] MeshList => type == DecorationType.Cliff ? Instance.CliffMeshes : type == DecorationType.Fertile ? Instance.FertileMeshes : Instance.GrassMeshes;
 
-        private Texture2D[] TextureList => type == DecorationType.Cliff ? Instance.CliffTextures : type == DecorationType.Fertile ? Instance.FertileTextures : Instance.GrassTextures;
+        internal Texture2D[] TextureList => type == DecorationType.Cliff ? Instance.CliffTextures : type == DecorationType.Fertile ? Instance.FertileTextures : Instance.GrassTextures;
 
-        private DecorationInfo[] DecorationTarget => type == DecorationType.Cliff ? Instance.CliffDecorations : type == DecorationType.Fertile ? Instance.FertileDecorations : Instance.GrassDecorations;
+        internal DecorationInfo[] DecorationTarget => type == DecorationType.Cliff ? Instance.CliffDecorations : type == DecorationType.Fertile ? Instance.FertileDecorations : Instance.GrassDecorations;
 
-        public ResourceLoader(DecorationType decoType)
+        internal void Awake()
         {
-            type = decoType;
             Instance.Prepare(type);
         }
 
-        private void Load(DecorationType type)
+        internal void Load()
         {
             for (int i = 0; i < DecorationTarget.Length; i++)
             {
-                DecorationTarget[i].m_mesh = MeshList[i];
-                DecorationTarget[i].m_renderMaterial.SetTexture("_MainTex", TextureList[i]);
+                try
+                {
+                    DecorationTarget[i].m_mesh = MeshList[i];
+                    DecorationTarget[i].m_renderMaterial.SetTexture("_MainTex", TextureList[i]);
+                }
+                catch (System.Exception)
+                {
+
+                }
             }
         }
 
-        private void Update()
+        internal void Update()
         {
             while (!loaded)
             {
-                if (MeshList != null && TextureList != null)
+                Load();
+
+                var done = false;
+
+                for (int i = 0; i < DecorationTarget.Length; i++)
                 {
-                    Load(type);
-
-                    var done = false;
-
-                    for (int i = 0; i < DecorationTarget.Length; i++)
-                    {
-                        if (DecorationTarget[i].m_mesh == MeshList[i]) done = true;
-                        else done = false;
-                    }
-
-                    loaded = done;
+                    if (DecorationTarget[i].m_mesh == MeshList[i]) done = true;
+                    else done = false;
                 }
-            }
-            switch (type)
-            {
-                case DecorationType.Grass:
-                    Instance.GrassMeshes = null;
-                    Instance.GrassTextures = null;
-                    break;
 
-                case DecorationType.Fertile:
-                    Instance.FertileMeshes = null;
-                    Instance.FertileTextures = null;
-                    break;
-                default:
-                    Instance.CliffMeshes = null;
-                    Instance.CliffTextures = null;
-                    break;
+                loaded = done;
             }
             Destroy(this);
         }
+    }
+
+    public class CliffLoader : ResourceLoader
+    {
+        internal new DecorationType type = DecorationType.Cliff;
+    }
+
+    public class FertileLoader : ResourceLoader
+    {
+        internal new DecorationType type = DecorationType.Fertile;
+    }
+
+    public class GrassLoader : ResourceLoader
+    {
+        internal new DecorationType type = DecorationType.Grass;
     }
 }

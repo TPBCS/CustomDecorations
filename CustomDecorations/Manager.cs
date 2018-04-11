@@ -156,9 +156,9 @@ namespace CustomDecorations
             Terrain.m_useCliffDecorations = Settings.UseCliffDecorations;
             DecorationRenderer.SetResolution((int)Settings.SelectedResolution);
             UpdateDensity(Settings.Density);
-            new ResourceLoader(DecorationType.Cliff);
-            new ResourceLoader(DecorationType.Fertile);
-            new ResourceLoader(DecorationType.Grass);
+            gameObject.AddComponent<CliffLoader>();
+            gameObject.AddComponent<FertileLoader>();
+            gameObject.AddComponent<GrassLoader>();
         }
 
         internal void UpdateDensity(int i)
