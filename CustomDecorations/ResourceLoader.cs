@@ -2,26 +2,26 @@
 
 namespace CustomDecorations
 {
-    public class ResourceLoader : MonoBehaviour
+    public class CliffLoader : MonoBehaviour
     {
-        internal bool loaded;
+        private bool loaded;
 
-        internal DecorationType type;
+        private DecorationType type = DecorationType.Cliff;
 
-        internal CustomDecorationsManager Instance => CustomDecorationsManager.instance;
+        private CustomDecorationsManager Instance => CustomDecorationsManager.instance;
 
-        internal Mesh[] MeshList => type == DecorationType.Cliff ? Instance.CliffMeshes : type == DecorationType.Fertile ? Instance.FertileMeshes : Instance.GrassMeshes;
+        private Mesh[] MeshList => Instance.CliffMeshes;
 
-        internal Texture2D[] TextureList => type == DecorationType.Cliff ? Instance.CliffTextures : type == DecorationType.Fertile ? Instance.FertileTextures : Instance.GrassTextures;
+        private Texture2D[] TextureList => Instance.CliffTextures;
 
-        internal DecorationInfo[] DecorationTarget => type == DecorationType.Cliff ? Instance.CliffDecorations : type == DecorationType.Fertile ? Instance.FertileDecorations : Instance.GrassDecorations;
+        private DecorationInfo[] DecorationTarget => Instance.CliffDecorations;
 
-        internal void Awake()
+        public void Awake()
         {
             Instance.Prepare(type);
         }
 
-        internal void Load()
+        private void Load(DecorationType type)
         {
             for (int i = 0; i < DecorationTarget.Length; i++)
             {
@@ -30,18 +30,75 @@ namespace CustomDecorations
                     DecorationTarget[i].m_mesh = MeshList[i];
                     DecorationTarget[i].m_renderMaterial.SetTexture("_MainTex", TextureList[i]);
                 }
-                catch (System.Exception)
+                catch (System.Exception x)
                 {
+                    Debug.LogError($"{x.Message} - {x.StackTrace}");
+                }                
+            }
+        }
 
+        private void Update()
+        {
+            while (!loaded)
+            {                
+                Load(type);
+
+                var done = false;
+
+                for (int i = 0; i < DecorationTarget.Length; i++)
+                {
+                    if (DecorationTarget[i].m_mesh == MeshList[i]) done = true;
+                    else done = false;
+                }
+
+                loaded = done;                
+            }
+            Instance.CliffMeshes = null;
+            Instance.CliffTextures = null;
+            Destroy(this);
+        }
+    }
+
+    public class FertileLoader : MonoBehaviour
+    {
+        private bool loaded;
+
+        private DecorationType type = DecorationType.Fertile;
+
+        private CustomDecorationsManager Instance => CustomDecorationsManager.instance;
+
+        private Mesh[] MeshList => Instance.FertileMeshes;
+
+        private Texture2D[] TextureList => Instance.FertileTextures;
+
+        private DecorationInfo[] DecorationTarget => Instance.FertileDecorations;
+
+        public void Awake()
+        {
+            Instance.Prepare(type);
+        }
+
+        private void Load(DecorationType type)
+        {
+            for (int i = 0; i < DecorationTarget.Length; i++)
+            {
+                try
+                {
+                    DecorationTarget[i].m_mesh = MeshList[i];
+                    DecorationTarget[i].m_renderMaterial.SetTexture("_MainTex", TextureList[i]);
+                }
+                catch (System.Exception x)
+                {
+                    Debug.LogError($"{x.Message} - {x.StackTrace}");
                 }
             }
         }
 
-        internal void Update()
+        private void Update()
         {
             while (!loaded)
             {
-                Load();
+                Load(type);
 
                 var done = false;
 
@@ -53,22 +110,66 @@ namespace CustomDecorations
 
                 loaded = done;
             }
+            Instance.FertileMeshes = null;
+            Instance.FertileTextures = null;
             Destroy(this);
         }
     }
 
-    public class CliffLoader : ResourceLoader
+    public class GrassLoader : MonoBehaviour
     {
-        internal new DecorationType type = DecorationType.Cliff;
-    }
+        private bool loaded;
 
-    public class FertileLoader : ResourceLoader
-    {
-        internal new DecorationType type = DecorationType.Fertile;
-    }
+        private DecorationType type = DecorationType.Grass;
 
-    public class GrassLoader : ResourceLoader
-    {
-        internal new DecorationType type = DecorationType.Grass;
+        private CustomDecorationsManager Instance => CustomDecorationsManager.instance;
+
+        private Mesh[] MeshList => Instance.GrassMeshes;
+
+        private Texture2D[] TextureList => Instance.GrassTextures;
+
+        private DecorationInfo[] DecorationTarget => Instance.GrassDecorations;
+
+        public void Awake()
+        {
+            Instance.Prepare(type);
+        }
+
+        private void Load(DecorationType type)
+        {
+            for (int i = 0; i < DecorationTarget.Length; i++)
+            {
+                try
+                {
+                    DecorationTarget[i].m_mesh = MeshList[i];
+                    DecorationTarget[i].m_renderMaterial.SetTexture("_MainTex", TextureList[i]);
+                }
+                catch (System.Exception x)
+                {
+                    Debug.LogError($"{x.Message} - {x.StackTrace}");
+                }
+            }
+        }
+
+        private void Update()
+        {
+            while (!loaded)
+            {
+                Load(type);
+
+                var done = false;
+
+                for (int i = 0; i < DecorationTarget.Length; i++)
+                {
+                    if (DecorationTarget[i].m_mesh == MeshList[i]) done = true;
+                    else done = false;
+                }
+
+                loaded = done;
+            }
+            Instance.GrassMeshes = null;
+            Instance.GrassTextures = null;
+            Destroy(this);
+        }
     }
 }

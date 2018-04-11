@@ -121,9 +121,9 @@ namespace CustomDecorations
             FertileTextures = new Texture2D[4];
             GrassTextures = new Texture2D[4];
 
-            var names = type == DecorationType.Cliff ? cliffNames : type == DecorationType.Fertile ? fertileNames : grassNames;
-            var meshList = type == DecorationType.Cliff ? CliffMeshes : type == DecorationType.Fertile ? FertileMeshes : GrassMeshes;
-            var textureList = type == DecorationType.Cliff ? CliffTextures : type == DecorationType.Fertile ? FertileTextures : GrassTextures;
+            var names = type == DecorationType.Cliff ? cliffNames : type == DecorationType.Fertile ? fertileNames : type == DecorationType.Grass ? grassNames : null;
+            var meshList = type == DecorationType.Cliff ? CliffMeshes : type == DecorationType.Fertile ? FertileMeshes : type == DecorationType.Grass ? GrassMeshes : null;
+            var textureList = type == DecorationType.Cliff ? CliffTextures : type == DecorationType.Fertile ? FertileTextures : type == DecorationType.Grass ? GrassTextures : null;
 
             for (int i = 0; i < 4; i++)
             {
@@ -141,9 +141,9 @@ namespace CustomDecorations
 
                     textureList[i] = texture;
                 }
-                catch (Exception)
+                catch (Exception x)
                 {
-                    
+                    Debug.LogError($"{x.Message} - {x.StackTrace}");
                 }
             }
         }        
