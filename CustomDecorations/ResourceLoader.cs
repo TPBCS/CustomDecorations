@@ -53,8 +53,6 @@ namespace CustomDecorations
 
                 loaded = done;                
             }
-            Instance.CliffMeshes = null;
-            Instance.CliffTextures = null;
             Destroy(this);
         }
     }
@@ -110,8 +108,6 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            Instance.FertileMeshes = null;
-            Instance.FertileTextures = null;
             Destroy(this);
         }
     }
@@ -167,8 +163,6 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            Instance.GrassMeshes = null;
-            Instance.GrassTextures = null;
             Destroy(this);
         }
     }
