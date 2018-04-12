@@ -39,7 +39,7 @@ namespace CustomDecorations
 
         private void Update()
         {
-            while (!loaded)
+            if (!loaded)
             {                
                 Load(type);
 
@@ -53,7 +53,7 @@ namespace CustomDecorations
 
                 loaded = done;                
             }
-            Destroy(this);
+            else Destroy(this);
         }
     }
 
@@ -94,7 +94,7 @@ namespace CustomDecorations
 
         private void Update()
         {
-            while (!loaded)
+            if (!loaded)
             {
                 Load(type);
 
@@ -108,7 +108,7 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            Destroy(this);
+            else Destroy(this);
         }
     }
 
@@ -149,7 +149,7 @@ namespace CustomDecorations
 
         private void Update()
         {
-            while (!loaded)
+            if (!loaded)
             {
                 Load(type);
 
@@ -163,7 +163,7 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            Destroy(this);
+            else Destroy(this);
         }
     }
 }
