@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace CustomDecorations
 {
-    class CustomDecorationsManager : Singleton<CustomDecorationsManager>
+    public class CustomDecorationsManager : Singleton<CustomDecorationsManager>
     {
-        internal bool InGame;
+        internal bool InGame;        
 
         internal Mesh[] CliffMeshes;
 
@@ -156,9 +156,12 @@ namespace CustomDecorations
             Terrain.m_useCliffDecorations = Settings.UseCliffDecorations;
             DecorationRenderer.SetResolution((int)Settings.SelectedResolution);
             UpdateDensity(Settings.Density);
-            gameObject.AddComponent<CliffLoader>();
-            gameObject.AddComponent<FertileLoader>();
-            gameObject.AddComponent<GrassLoader>();
+            var cliffObject = new GameObject("CliffObject");
+            var fertileObject = new GameObject("FertileObject");
+            var grassObject = new GameObject("GrassObject");
+            cliffObject.AddComponent<CliffLoader>();
+            fertileObject.AddComponent<FertileLoader>();
+            grassObject.AddComponent<GrassLoader>();
         }
 
         internal void UpdateDensity(int i)

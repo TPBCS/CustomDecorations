@@ -32,7 +32,7 @@ namespace CustomDecorations
                 }
                 catch (System.Exception x)
                 {
-                    Debug.LogError($"{x.Message} - {x.StackTrace}");
+                    Debug.Log($"{x.Message} - {x.StackTrace}");
                 }                
             }
         }
@@ -52,8 +52,12 @@ namespace CustomDecorations
                 }
 
                 loaded = done;                
+            }            
+            else
+            {
+                var o = GameObject.Find("CliffObject");
+                if (o) Destroy(o);
             }
-            else Destroy(this);
         }
     }
 
@@ -87,7 +91,7 @@ namespace CustomDecorations
                 }
                 catch (System.Exception x)
                 {
-                    Debug.LogError($"{x.Message} - {x.StackTrace}");
+                    Debug.Log($"{x.Message} - {x.StackTrace}");
                 }
             }
         }
@@ -108,7 +112,11 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            else Destroy(this);
+            else
+            {
+                var o = GameObject.Find("FertileObject");
+                if (o) Destroy(o);
+            }
         }
     }
 
@@ -142,7 +150,7 @@ namespace CustomDecorations
                 }
                 catch (System.Exception x)
                 {
-                    Debug.LogError($"{x.Message} - {x.StackTrace}");
+                    Debug.Log($"{x.Message} - {x.StackTrace}");
                 }
             }
         }
@@ -163,7 +171,11 @@ namespace CustomDecorations
 
                 loaded = done;
             }
-            else Destroy(this);
+            else
+            {
+                var o = GameObject.Find("GrassObject");
+                if (o) Destroy(o);
+            }
         }
     }
 }

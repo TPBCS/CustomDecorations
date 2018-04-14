@@ -116,7 +116,11 @@ namespace CustomDecorations
             {
                 Settings.SelectedCliffPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.gameObject.AddComponent<CliffLoader>();
+                if (Manager.InGame)
+                {
+                    var cliffObject = new GameObject("CliffObject");
+                    cliffObject.AddComponent<CliffLoader>();
+                }
             });
             cliffDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -125,7 +129,11 @@ namespace CustomDecorations
             {
                 Settings.SelectedFertilePack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.gameObject.AddComponent<FertileLoader>();
+                if (Manager.InGame)
+                {
+                    var fertileObject = new GameObject("FertileObject");
+                    fertileObject.AddComponent<FertileLoader>();
+                }
             });
             fertileDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
@@ -134,12 +142,24 @@ namespace CustomDecorations
             {
                 Settings.SelectedGrassPack = PackNames[index];
                 Settings.Save();
-                if (Manager.InGame) Manager.gameObject.AddComponent<GrassLoader>();
+                if (Manager.InGame)
+                {
+                    var grassObject = new GameObject("GrassObject");
+                    grassObject.AddComponent<GrassLoader>();
+                }
             });
             grassDropdown.size = dropdownSize;
             helper.AddSpace(uiSpacing);
 
-            helper.AddButton("Load All", () => { Manager.gameObject.AddComponent<CliffLoader>(); Manager.gameObject.AddComponent<FertileLoader>(); Manager.gameObject.AddComponent<GrassLoader>(); });
+            helper.AddButton("Load All", () =>
+            {
+                var cliffObject = new GameObject("CliffObject");
+                var fertileObject = new GameObject("FertileObject");
+                var grassObject = new GameObject("GrassObject");
+                cliffObject.AddComponent<CliffLoader>();
+                fertileObject.AddComponent<FertileLoader>();
+                grassObject.AddComponent<GrassLoader>();
+            });
         }        
 
         private string[] GetPackNames()
