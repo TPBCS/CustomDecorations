@@ -118,8 +118,7 @@ namespace CustomDecorations
                 Settings.Save();
                 if (Manager.InGame)
                 {
-                    var cliffObject = new GameObject("CliffObject");
-                    cliffObject.AddComponent<CliffLoader>();
+                    Manager.Load(DecorationType.Cliff);
                 }
             });
             cliffDropdown.size = dropdownSize;
@@ -131,8 +130,7 @@ namespace CustomDecorations
                 Settings.Save();
                 if (Manager.InGame)
                 {
-                    var fertileObject = new GameObject("FertileObject");
-                    fertileObject.AddComponent<FertileLoader>();
+                    Manager.Load(DecorationType.Fertile);
                 }
             });
             fertileDropdown.size = dropdownSize;
@@ -144,8 +142,7 @@ namespace CustomDecorations
                 Settings.Save();
                 if (Manager.InGame)
                 {
-                    var grassObject = new GameObject("GrassObject");
-                    grassObject.AddComponent<GrassLoader>();
+                    Manager.Load(DecorationType.Grass);
                 }
             });
             grassDropdown.size = dropdownSize;
@@ -153,12 +150,9 @@ namespace CustomDecorations
 
             helper.AddButton("Load All", () =>
             {
-                var cliffObject = new GameObject("CliffObject");
-                var fertileObject = new GameObject("FertileObject");
-                var grassObject = new GameObject("GrassObject");
-                cliffObject.AddComponent<CliffLoader>();
-                fertileObject.AddComponent<FertileLoader>();
-                grassObject.AddComponent<GrassLoader>();
+                Manager.Load(DecorationType.Cliff);
+                Manager.Load(DecorationType.Grass);
+                Manager.Load(DecorationType.Fertile);
             });
         }        
 

@@ -3,26 +3,16 @@ using ColossalFramework.Plugins;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System;
 using UnityEngine;
+using System.Collections;
 
 namespace CustomDecorations
 {
     public class CustomDecorationsManager : Singleton<CustomDecorationsManager>
     {
-        internal bool InGame;        
+        internal bool InGame;
 
-        internal Mesh[] CliffMeshes;
-
-        internal Texture2D[] CliffTextures;
-
-        internal Mesh[] FertileMeshes;
-
-        internal Texture2D[] FertileTextures;
-
-        internal Mesh[] GrassMeshes;
-
-        internal Texture2D[] GrassTextures;
+        internal UnityMainThreadDispatcher Dispatcher;
 
         internal DecorationRenderer DecorationRenderer => ReflectionUtil.GetField<DecorationRenderer>(TerrainManager.instance, "m_decoRenderer");
 
@@ -88,7 +78,7 @@ namespace CustomDecorations
             return customDecorationsPacks;
         }
 
-        internal void Prepare(DecorationType type)
+        internal void Load1(DecorationType type)
         {
             CustomDecorationsData pack;            
             
@@ -108,60 +98,81 @@ namespace CustomDecorations
             if (pack != null) LoadResources(pack, type);
         }
 
-        internal void LoadResources(CustomDecorationsData pack, DecorationType type)
+        internal void Load(DecorationType type)
+        {
+            CustomDecorationsData pack;
+
+            switch (type)
+            {
+                case DecorationType.Grass:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedGrassPack);
+                    break;
+                case DecorationType.Fertile:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedFertilePack);
+                    break;
+                default:
+                    pack = AvailablePacks.Find(p => p.Name == Settings.SelectedCliffPack);
+                    break;
+            }
+
+            if (pack != null) UnityMainThreadDispatcher.Instance().Enqueue(LoadResources(pack, type));
+        }
+
+        internal IEnumerator LoadResources(CustomDecorationsData pack, DecorationType type)
         {
             var cliffNames = new string[] { "cliff0", "cliff1", "cliff2", "cliff3" };
             var fertileNames = new string[] { "fertile0", "fertile1", "fertile2", "fertile3" };
             var grassNames = new string[] { "grass0", "grass1", "grass2", "grass3" };
 
-            CliffMeshes = new Mesh[4];
-            FertileMeshes = new Mesh[4];
-            GrassMeshes = new Mesh[4];
-            CliffTextures = new Texture2D[4];
-            FertileTextures = new Texture2D[4];
-            GrassTextures = new Texture2D[4];
-
             var names = type == DecorationType.Cliff ? cliffNames : type == DecorationType.Fertile ? fertileNames : type == DecorationType.Grass ? grassNames : null;
-            var meshList = type == DecorationType.Cliff ? CliffMeshes : type == DecorationType.Fertile ? FertileMeshes : type == DecorationType.Grass ? GrassMeshes : null;
-            var textureList = type == DecorationType.Cliff ? CliffTextures : type == DecorationType.Fertile ? FertileTextures : type == DecorationType.Grass ? GrassTextures : null;
+            var decorationTarget = type == DecorationType.Cliff ? CliffDecorations : type == DecorationType.Fertile ? FertileDecorations : type == DecorationType.Grass ? GrassDecorations : null;
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < decorationTarget.Length; i++)
             {
+                
                 var texturePath = Path.Combine(pack.ResourcesPath, names[i] + ".png");
+
+                var textureXYCAPath = Path.Combine(pack.ResourcesPath, names[i] + "XYCA.png");
 
                 var meshPath = Path.Combine(pack.ResourcesPath, names[i] + ".obj");
 
                 var texture = Util.LoadTexture(texturePath);
 
+                yield return null;
+
+                var textureXYCA = Util.LoadTexture(textureXYCAPath);
+
+                yield return null;
+
                 var mesh = Util.LoadMesh(meshPath);
 
-                try
-                {
-                    meshList[i] = mesh;
+                yield return null;
 
-                    textureList[i] = texture;
-                }
-                catch (Exception x)
-                {
-                    Debug.LogError($"{x.Message} - {x.StackTrace}");
-                }
+                decorationTarget[i].m_mesh = mesh;
+
+                decorationTarget[i].m_renderMaterial.SetTexture("_MainTex", texture);
+
+                if(textureXYCA)decorationTarget[i].m_renderMaterial.SetTexture("_XYCAMap", textureXYCA);               
+
             }
-        }        
+
+            DecorationRenderer.SetResolution((int)Settings.SelectedResolution);
+
+            yield break;
+        } 
 
         internal void OnLevelLoaded()
         {
             InGame = true;
+            Dispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
+            Load(DecorationType.Cliff);
+            Load(DecorationType.Fertile);
+            Load(DecorationType.Grass);
             Terrain.m_useGrassDecorations = Settings.UseGrassDecorations;
             Terrain.m_useFertileDecorations = Settings.UseFertileDecorations;
             Terrain.m_useCliffDecorations = Settings.UseCliffDecorations;
             DecorationRenderer.SetResolution((int)Settings.SelectedResolution);
             UpdateDensity(Settings.Density);
-            var cliffObject = new GameObject("CliffObject");
-            var fertileObject = new GameObject("FertileObject");
-            var grassObject = new GameObject("GrassObject");
-            cliffObject.AddComponent<CliffLoader>();
-            fertileObject.AddComponent<FertileLoader>();
-            grassObject.AddComponent<GrassLoader>();
         }
 
         internal void UpdateDensity(int i)

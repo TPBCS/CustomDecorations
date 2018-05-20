@@ -51,6 +51,32 @@ namespace CustomDecorations
             }
             
         }
+
+        //internal static IEnumerator<Mesh> LoadMesh(string fullPath)
+        //{
+        //    if (!File.Exists(fullPath)) yield return null;
+        //    var mesh = new Mesh();
+        //    using (var fileStream = File.Open(fullPath, FileMode.Open))
+        //    {
+        //        mesh.LoadOBJ(OBJLoader.LoadOBJ(fileStream));
+        //    }
+        //    mesh.name = Path.GetFileNameWithoutExtension(fullPath);
+        //    yield return mesh;
+        //}
+
+        //internal static IEnumerator<Texture2D> LoadTexture(string filePath, TextureFormat format = TextureFormat.ARGB32, bool mips = true)
+        //{
+        //    if (!File.Exists(filePath)) yield return null;
+            
+        //    var texture = new Texture2D(1, 1, format, mips)
+        //    {
+        //        anisoLevel = 7,
+        //        filterMode = FilterMode.Trilinear,
+        //        wrapMode = TextureWrapMode.Clamp
+        //    };
+        //    texture.LoadImage(File.ReadAllBytes(filePath));
+        //    yield return texture;
+        //}
     }
 
     public class ReflectionUtil

@@ -23,7 +23,7 @@ namespace CustomDecorations
 
         public static Texture2D GetTexture(this DecorationInfo info)
         {
-            return info.m_renderMaterial.GetTexture("_MainTex") as Texture2D;
+            return info.m_renderMaterial?.GetTexture("_MainTex") as Texture2D;
         }
     }
 

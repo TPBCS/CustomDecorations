@@ -3,4 +3,6 @@ C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\Cust
 C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\bin\Release\ObjUnity3D.dll
 C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Release\CustomDecorations.dll
 C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Release\CustomDecorations.pdb
+C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Release\CustomDecorations.csproj.CoreCompileInputs.cache
+C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Release\CustomDecorations.csproj.CopyComplete
 C:\Users\Tateihuari\Documents\Visual Studio 2017\Projects\CustomDecorations\CustomDecorations\obj\Release\CustomDecorations.csprojResolveAssemblyReference.cache
